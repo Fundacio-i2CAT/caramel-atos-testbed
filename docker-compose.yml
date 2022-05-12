@@ -1,0 +1,27 @@
+version: "3.5"
+services:
+  broker:
+    container_name: "broker"
+    image: "eclipse-mosquitto:1.5"
+    expose:
+      - 1883
+    networks:
+      - internal
+  pki:
+    container_name: pki
+    build: ./pki-client
+    networks:
+      - internal
+    depends_on:
+      - broker
+  acceptancetest:
+    container_name: acceptance_test
+    build: ./caramel-ATOS-at
+    networks:
+      - internal
+    depends_on:
+      - pki
+      - broker
+
+networks:
+  internal:
